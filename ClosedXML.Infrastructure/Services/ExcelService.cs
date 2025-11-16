@@ -37,5 +37,15 @@ namespace ClosedXML.Infrastructure.Services
             }
         }
         
+        public void ModifyExampleLocal(string filePath, int newAge)
+        {
+            using (var workbook = new XLWorkbook(filePath))
+            {
+                var worksheet = workbook.Worksheet(1);
+                worksheet.Cell(2, 2).Value = newAge;
+                workbook.Save();
+            }
+        }
+        
     }
 }

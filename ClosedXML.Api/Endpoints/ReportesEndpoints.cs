@@ -1,8 +1,9 @@
 using System.IO;
 using ClosedXML.Application.Interfaces;
-using Microsoft.AspNetCore.Builder; 
-using Microsoft.AspNetCore.Http; 
-using Microsoft.AspNetCore.Routing; 
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Mvc; 
 
 namespace ClosedXML.Api.Endpoints
 {
@@ -10,7 +11,7 @@ namespace ClosedXML.Api.Endpoints
     {
         public static void MapReportesEndpoints(this IEndpointRouteBuilder app)
         {
-            // Endpoint de descarga
+            // 1. Endpoint de descarga (Parte 2)
             app.MapGet("/api/reportes/parte2-ejemplo", (IExcelService excelService) =>
             {
                 var fileBytes = excelService.CreateFirstExample();
@@ -21,7 +22,7 @@ namespace ClosedXML.Api.Endpoints
             .WithName("GetFirstExampleReport")
             .WithTags("Reportes (Laboratorio)");
 
-            // Endpoint de guardado local
+            // 2. Endpoint de guardado local (Parte 2)
             app.MapGet("/api/reportes/parte2-guardar-local", (IExcelService excelService) =>
             {
                 try
@@ -31,7 +32,6 @@ namespace ClosedXML.Api.Endpoints
                     string fullPath = Path.Combine(folderPath, fileName);
 
                     Directory.CreateDirectory(folderPath);
-
                     excelService.CreateFirstExampleLocal(fullPath);
 
                     return Results.Ok($"¡Éxito! Archivo guardado en: {fullPath}");
@@ -44,6 +44,31 @@ namespace ClosedXML.Api.Endpoints
             .WithName("SaveFirstExampleReportLocally")
             .WithTags("Reportes (Laboratorio)");
 
+            // 3. Endpoint de Modificación (Parte 3 - EL NUEVO)
+            app.MapPut("/api/reportes/parte3-modificar", (IExcelService excelService, [FromQuery] int nuevaEdad = 30) =>
+            {
+                try
+                {
+                    string folderPath = @"C:\Users\geanm\OneDrive\Desktop\6-ciclo\excel";
+                    string fileName = "archivo_creado_localmente.xlsx";
+                    string fullPath = Path.Combine(folderPath, fileName);
+
+                    if (!File.Exists(fullPath))
+                    {
+                        return Results.NotFound($"El archivo no existe. Ejecuta primero el endpoint de 'guardar-local'.");
+                    }
+
+                    excelService.ModifyExampleLocal(fullPath, nuevaEdad);
+
+                    return Results.Ok($"¡Éxito! La edad de Juan ha sido actualizada a {nuevaEdad} en el archivo: {fileName}");
+                }
+                catch (Exception ex)
+                {
+                    return Results.Problem($"Error al modificar el archivo: {ex.Message}");
+                }
+            })
+            .WithName("ModifyExampleReportLocally")
+            .WithTags("Reportes (Laboratorio)");
         }
     }
 }

@@ -5,5 +5,7 @@ namespace ClosedXML.Application.Interfaces
         byte[] CreateFirstExample();
          
         void CreateFirstExampleLocal(string filePath);
+        
+        void ModifyExampleLocal(string filePath, int newAge);
     }
 }
