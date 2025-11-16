@@ -44,7 +44,7 @@ namespace ClosedXML.Api.Endpoints
             .WithName("SaveFirstExampleReportLocally")
             .WithTags("Reportes (Laboratorio)");
 
-            // 3. Endpoint de Modificación (Parte 3 - EL NUEVO)
+            // 3. Endpoint de Modificación
             app.MapPut("/api/reportes/parte3-modificar", (IExcelService excelService, [FromQuery] int nuevaEdad = 30) =>
             {
                 try
@@ -69,6 +69,31 @@ namespace ClosedXML.Api.Endpoints
             })
             .WithName("ModifyExampleReportLocally")
             .WithTags("Reportes (Laboratorio)");
+            
+                
+            // 4. Endpoint de Tablas
+            app.MapGet("/api/reportes/parte4-tabla", (IExcelService excelService) =>
+                {
+                    try
+                    {
+                        string folderPath = @"C:\Users\geanm\OneDrive\Desktop\6-ciclo\excel";
+                        string fileName = "tabla_ejemplo.xlsx"; 
+                        string fullPath = Path.Combine(folderPath, fileName);
+
+                        Directory.CreateDirectory(folderPath);
+
+                        // Llamamos al nuevo servicio
+                        excelService.CreateExampleWithTable(fullPath);
+
+                        return Results.Ok($"¡Éxito! Archivo con tabla guardado en: {fullPath}");
+                    }
+                    catch (Exception ex)
+                    {
+                        return Results.Problem($"Error al crear la tabla: {ex.Message}");
+                    }
+                })
+                .WithName("CreateExampleWithTable")
+                .WithTags("Reportes (Laboratorio)");
         }
     }
 }

@@ -7,5 +7,7 @@ namespace ClosedXML.Application.Interfaces
         void CreateFirstExampleLocal(string filePath);
         
         void ModifyExampleLocal(string filePath, int newAge);
+        
+        void CreateExampleWithTable(string filePath);
     }
 }
