@@ -94,6 +94,29 @@ namespace ClosedXML.Api.Endpoints
                 })
                 .WithName("CreateExampleWithTable")
                 .WithTags("Reportes (Laboratorio)");
+            
+            // 5. Endopoint de estilos
+            app.MapGet("/api/reportes/parte5-estilos", (IExcelService excelService) =>
+                {
+                    try
+                    {
+                        string folderPath = @"C:\Users\geanm\OneDrive\Desktop\6-ciclo\excel";
+                        string fileName = "archivo_con_estilos.xlsx";
+                        string fullPath = Path.Combine(folderPath, fileName);
+
+                        Directory.CreateDirectory(folderPath);
+
+                        excelService.CreateExampleWithStyles(fullPath);
+
+                        return Results.Ok($"¡Éxito! Archivo con estilos guardado en: {fullPath}");
+                    }
+                    catch (Exception ex)
+                    {
+                        return Results.Problem($"Error al crear el archivo con estilos: {ex.Message}");
+                    }
+                })
+                .WithName("CreateExampleWithStyles")
+                .WithTags("Reportes (Laboratorio)");
         }
     }
 }

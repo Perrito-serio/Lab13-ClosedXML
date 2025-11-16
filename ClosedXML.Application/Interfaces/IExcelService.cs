@@ -9,5 +9,7 @@ namespace ClosedXML.Application.Interfaces
         void ModifyExampleLocal(string filePath, int newAge);
         
         void CreateExampleWithTable(string filePath);
+        
+        void CreateExampleWithStyles(string filePath);
     }
 }
